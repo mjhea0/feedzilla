@@ -1,0 +1,29 @@
+{% extends 'feedzilla/base.html' %}
+{% load i18n %}
+
+{% block feedzilla_extra_js %}
+<script type="text/javascript">
+$(function() {
+    var query = '{{ query.upper|addslashes|safe }}';
+    $('.post .content').each(function() {
+        $.highlight(this, query);
+    });
+});
+</script>
+{% endblock %}
+
+{% block feedzilla_query_value %}{{ query }}{% endblock %}
+
+{% block feedzilla_content %}
+<h1>{% block title %}{% blocktrans %}Search for &laquo;{{ query }}&raquo;{% endblocktrans %}{% endblock %}</h1>
+
+<div class="divider2"></div>
+{% if page.object_list %}
+    {% for post in page.object_list %}
+    {% include 'feedzilla/_post_template.html' %}
+    {% endfor %}
+    {% include "common/pagination.html" %}
+{% else %}
+    <p>{% if message %}{{ message }}{% else %}{% trans "Nothing was found" %}{% endif %}</p>
+{% endif %}
+{% endblock %}
